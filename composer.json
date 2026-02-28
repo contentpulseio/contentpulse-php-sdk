@@ -1,0 +1,44 @@
+{
+    "name": "contentpulse/contentpulse-php",
+    "description": "The official PHP SDK for ContentPulse.io — content rendering, API client, and publishing utilities.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["contentpulse", "cms", "content", "seo", "rendering", "api-client"],
+    "homepage": "https://github.com/contentpulseio/contentpulse-php-sdk",
+    "authors": [
+        {
+            "name": "ContentPulse",
+            "email": "dev@contentpulse.io"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "guzzlehttp/guzzle": "^7.8",
+        "psr/http-client": "^1.0",
+        "psr/log": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0",
+        "laravel/pint": "^1.0",
+        "phpstan/phpstan": "^2.0",
+        "mockery/mockery": "^1.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "ContentPulse\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ContentPulse\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
