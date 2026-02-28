@@ -22,7 +22,7 @@ composer require contentpulse/contentpulse-php
 use ContentPulse\Http\ContentPulseClient;
 
 $client = new ContentPulseClient(
-    apiUrl: 'https://api.contentpulse.io/v1',
+    baseUrl: 'https://api.contentpulse.io',
     apiKey: 'your-api-key'
 );
 ```
@@ -30,7 +30,12 @@ $client = new ContentPulseClient(
 ### Fetch content feed
 
 ```php
-$feed = $client->getContentFeed(websiteId: 1, limit: 20);
+use ContentPulse\Core\DTO\ContentFilters;
+
+$feed = $client->getContentFeed(new ContentFilters(
+    websiteId: 1,
+    perPage: 20,
+));
 foreach ($feed->items as $item) {
     // $item contains content metadata and structure
 }
@@ -42,7 +47,7 @@ foreach ($feed->items as $item) {
 use ContentPulse\Rendering\HtmlRenderer;
 
 $renderer = new HtmlRenderer();
-$html = $renderer->render($content->structure);
+$html = $renderer->renderAll($content->sections);
 ```
 
 ### Section normalizer
@@ -69,11 +74,12 @@ Build platform-specific payloads for WordPress or Shopify:
 
 ```php
 use ContentPulse\Publishing\PublishPayloadBuilder;
+use ContentPulse\Rendering\HtmlRenderer;
 
-$builder = new PublishPayloadBuilder();
-$payload = $builder->forWordPress($content);
+$builder = new PublishPayloadBuilder(new HtmlRenderer());
+$payload = $builder->buildForWordPress($content);
 // or
-$payload = $builder->forShopify($content);
+$payload = $builder->buildForShopify($content);
 ```
 
 ## Architecture
