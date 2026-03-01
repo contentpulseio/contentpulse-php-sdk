@@ -75,6 +75,28 @@ class ContentPulseClient implements ContentClientInterface
     }
 
     /**
+     * Retrieve a paginated list of tenant websites.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getWebsites(int $page = 1, int $perPage = 50): array
+    {
+        $response = $this->request('GET', 'websites', [
+            'query' => [
+                'page' => max(1, $page),
+                'per_page' => max(1, $perPage),
+            ],
+        ]);
+
+        $data = $response['data'] ?? [];
+        if (! is_array($data)) {
+            return [];
+        }
+
+        return array_values(array_filter($data, 'is_array'));
+    }
+
+    /**
      * @param  array<string, mixed>  $options  Guzzle request options
      * @return array<string, mixed>
      */
