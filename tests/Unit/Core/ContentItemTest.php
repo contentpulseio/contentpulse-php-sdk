@@ -14,7 +14,7 @@ class ContentItemTest extends TestCase
     public function it_creates_from_api_response(): void
     {
         $data = [
-            'id' => 42,
+            'id' => '01KRDW4ND6CN9Y7E0S3J0BVBTQ',
             'slug' => 'test-article',
             'title' => 'Test Article',
             'body' => [
@@ -37,7 +37,7 @@ class ContentItemTest extends TestCase
 
         $item = ContentItem::fromApiResponse($data);
 
-        $this->assertSame(42, $item->id);
+        $this->assertSame('01KRDW4ND6CN9Y7E0S3J0BVBTQ', $item->id);
         $this->assertSame('test-article', $item->slug);
         $this->assertSame('Test Article', $item->title);
         $this->assertCount(2, $item->sections);
@@ -55,7 +55,7 @@ class ContentItemTest extends TestCase
     public function it_handles_empty_body(): void
     {
         $data = [
-            'id' => 1,
+            'id' => '01KRDW4ND6CN9Y7E0S3J0BVBTQ',
             'slug' => 'empty',
             'title' => 'Empty',
             'body' => [],
@@ -63,6 +63,7 @@ class ContentItemTest extends TestCase
 
         $item = ContentItem::fromApiResponse($data);
 
+        $this->assertSame('01KRDW4ND6CN9Y7E0S3J0BVBTQ', $item->id);
         $this->assertSame([], $item->sections);
     }
 
@@ -70,7 +71,7 @@ class ContentItemTest extends TestCase
     public function it_handles_missing_optional_fields(): void
     {
         $data = [
-            'id' => 1,
+            'id' => '01KRDW4ND6CN9Y7E0S3J0BVBTQ',
             'slug' => 'minimal',
             'title' => 'Minimal',
         ];
@@ -81,5 +82,19 @@ class ContentItemTest extends TestCase
         $this->assertNull($item->publishedAt);
         $this->assertNull($item->excerpt);
         $this->assertSame([], $item->sections);
+    }
+
+    #[Test]
+    public function it_keeps_id_as_string_when_payload_is_numeric(): void
+    {
+        $data = [
+            'id' => 42,
+            'slug' => 'numeric-id',
+            'title' => 'Numeric',
+        ];
+
+        $item = ContentItem::fromApiResponse($data);
+
+        $this->assertSame('42', $item->id);
     }
 }

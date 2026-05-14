@@ -35,7 +35,7 @@ class PublishPayloadBuilderTest extends TestCase
 
         $payload = $this->builder->build($content);
 
-        $this->assertSame(10, $payload['contentpulse_id']);
+        $this->assertSame('10', $payload['contentpulse_id']);
         $this->assertSame('Test Post', $payload['title']);
         $this->assertSame('test-post', $payload['slug']);
         $this->assertStringContainsString('<p>Hello.</p>', $payload['body_html']);

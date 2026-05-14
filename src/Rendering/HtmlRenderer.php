@@ -358,7 +358,7 @@ class HtmlRenderer implements SectionRendererInterface
     private function slugify(string $text): string
     {
         $text = strip_tags($text);
-        $text = strtolower(trim($text));
+        $text = mb_strtolower(trim($text));
         $text = preg_replace('/[^a-z0-9\s-]/', '', $text) ?? '';
         $text = preg_replace('/[\s-]+/', '-', $text) ?? '';
 

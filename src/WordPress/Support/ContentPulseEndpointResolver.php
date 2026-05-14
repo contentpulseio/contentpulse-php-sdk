@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace ContentPulse\WordPress\Support;
 
+use function constant;
+use function defined;
+
 final class ContentPulseEndpointResolver
 {
     public const DEFAULT_API_BASE_URL = 'https://api.contentpulse.io';
@@ -43,7 +46,7 @@ final class ContentPulseEndpointResolver
         }
 
         if (preg_match('#/api/v1$#i', $candidate) === 1) {
-            return substr($candidate, 0, -7);
+            return mb_substr($candidate, 0, -7);
         }
 
         return $candidate;
@@ -56,22 +59,24 @@ final class ContentPulseEndpointResolver
         return $candidate !== '' ? $candidate : self::resolveDefaultAppBaseUrl();
     }
 
-    public static function buildPublishWordPressEndpoint(string $apiBaseUrl, int $contentId): string
+    public static function buildPublishWordPressEndpoint(string $apiBaseUrl, string $contentId): string
     {
-        if ($contentId <= 0) {
+        $id = trim($contentId);
+        if ($id === '') {
             return '';
         }
 
-        return self::resolveApiBaseUrl($apiBaseUrl)."/api/v1/content/{$contentId}/publish-wordpress";
+        return self::resolveApiBaseUrl($apiBaseUrl).'/api/v1/content/'.rawurlencode($id).'/publish-wordpress';
     }
 
-    public static function buildContentUrl(string $appBaseUrl, int $contentId): string
+    public static function buildContentUrl(string $appBaseUrl, string $contentId): string
     {
-        if ($contentId <= 0) {
+        $id = trim($contentId);
+        if ($id === '') {
             return '';
         }
 
-        return self::resolveAppBaseUrl($appBaseUrl)."/content/{$contentId}";
+        return self::resolveAppBaseUrl($appBaseUrl).'/content/'.rawurlencode($id);
     }
 
     private static function resolveConfiguredUrl(
@@ -84,8 +89,8 @@ final class ContentPulseEndpointResolver
             return $normalizedConfigured;
         }
 
-        if (\defined($constantName)) {
-            $constantValue = \constant($constantName);
+        if (defined($constantName)) {
+            $constantValue = constant($constantName);
             if (is_string($constantValue)) {
                 $normalizedConstant = self::normalizeBaseUrl($constantValue);
                 if ($normalizedConstant !== '') {

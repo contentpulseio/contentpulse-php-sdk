@@ -15,9 +15,9 @@ class PublicationRecordTest extends TestCase
     public function it_creates_from_successful_publish_result(): void
     {
         $result = PublishResult::success('wordpress', '42', 'https://example.com/post/42');
-        $record = PublicationRecord::fromPublishResult(10, $result);
+        $record = PublicationRecord::fromPublishResult('01KRDW4ND6CN9Y7E0S3J0BVBTQ', $result);
 
-        $this->assertSame(10, $record->contentId);
+        $this->assertSame('01KRDW4ND6CN9Y7E0S3J0BVBTQ', $record->contentId);
         $this->assertSame('wordpress', $record->platform);
         $this->assertSame('42', $record->remoteId);
         $this->assertSame('https://example.com/post/42', $record->remoteUrl);
@@ -30,9 +30,9 @@ class PublicationRecordTest extends TestCase
     public function it_creates_from_failed_publish_result(): void
     {
         $result = PublishResult::failure('shopify', 'API rate limit exceeded');
-        $record = PublicationRecord::fromPublishResult(20, $result);
+        $record = PublicationRecord::fromPublishResult('01KRDW4ND6CN9Y7E0S3J0BVBTR', $result);
 
-        $this->assertSame(20, $record->contentId);
+        $this->assertSame('01KRDW4ND6CN9Y7E0S3J0BVBTR', $record->contentId);
         $this->assertSame('shopify', $record->platform);
         $this->assertSame('failed', $record->status);
         $this->assertSame('API rate limit exceeded', $record->errorMessage);
@@ -42,7 +42,7 @@ class PublicationRecordTest extends TestCase
     public function it_converts_to_array_matching_db_schema(): void
     {
         $record = new PublicationRecord(
-            contentId: 5,
+            contentId: '01KRDW4ND6CN9Y7E0S3J0BVBTQ',
             platform: 'wordpress',
             remoteId: '100',
             remoteUrl: 'https://example.com/post/100',
@@ -56,14 +56,14 @@ class PublicationRecordTest extends TestCase
         $this->assertArrayHasKey('remote_id', $array);
         $this->assertArrayHasKey('remote_url', $array);
         $this->assertArrayHasKey('status', $array);
-        $this->assertSame(5, $array['content_id']);
+        $this->assertSame('01KRDW4ND6CN9Y7E0S3J0BVBTQ', $array['content_id']);
     }
 
     #[Test]
     public function report_payload_filters_null_values(): void
     {
         $record = new PublicationRecord(
-            contentId: 1,
+            contentId: '01KRDW4ND6CN9Y7E0S3J0BVBTQ',
             platform: 'wordpress',
             status: 'pending',
         );

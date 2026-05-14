@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ContentPulse\Core\DTO;
 
+use ContentPulse\Rendering\SectionNormalizer;
 use DateTimeImmutable;
 
 final class ContentItem
@@ -16,7 +17,7 @@ final class ContentItem
      * @param  array<string, mixed>  $raw  Original API response data
      */
     public function __construct(
-        public readonly int $id,
+        public readonly string $id,
         public readonly string $slug,
         public readonly string $title,
         public readonly array $sections,
@@ -45,13 +46,15 @@ final class ContentItem
     public static function fromApiResponse(array $data): self
     {
         $body = $data['body'] ?? [];
-        $normalizer = new \ContentPulse\Rendering\SectionNormalizer;
+        $normalizer = new SectionNormalizer;
         $sections = $normalizer->normalize($body);
 
         $seo = SeoMeta::fromArray($data);
 
         return new self(
-            id: (int) ($data['id'] ?? 0),
+            // Content IDs are public ULID strings (e.g. "01KRDW4ND6CN9Y7E0S3J0BVBTQ").
+            // Treat as string so ULIDs are not truncated by an int cast.
+            id: (string) ($data['id'] ?? ''),
             slug: $data['slug'] ?? '',
             title: $data['title'] ?? '',
             sections: $sections,

@@ -16,7 +16,7 @@ use DateTimeImmutable;
 final class PublicationRecord
 {
     public function __construct(
-        public readonly int $contentId,
+        public readonly string $contentId,
         public readonly string $platform,
         public readonly ?string $remoteId = null,
         public readonly ?string $remoteUrl = null,
@@ -28,7 +28,7 @@ final class PublicationRecord
     /**
      * Build from a PublishResult after a publish operation completes.
      */
-    public static function fromPublishResult(int $contentId, PublishResult $result): self
+    public static function fromPublishResult(string $contentId, PublishResult $result): self
     {
         return new self(
             contentId: $contentId,

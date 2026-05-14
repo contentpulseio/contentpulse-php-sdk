@@ -47,23 +47,34 @@ class ContentPulseEndpointResolverTest extends TestCase
     {
         $endpoint = ContentPulseEndpointResolver::buildPublishWordPressEndpoint(
             'http://contentpulse.test:8080/api/v1/',
-            11
+            '01KRDW4ND6CN9Y7E0S3J0BVBTQ'
         );
 
         $this->assertSame(
-            'http://contentpulse.test:8080/api/v1/content/11/publish-wordpress',
+            'http://contentpulse.test:8080/api/v1/content/01KRDW4ND6CN9Y7E0S3J0BVBTQ/publish-wordpress',
             $endpoint
         );
     }
 
     #[Test]
+    public function it_returns_empty_publish_endpoint_when_content_id_is_blank(): void
+    {
+        $endpoint = ContentPulseEndpointResolver::buildPublishWordPressEndpoint(
+            'http://contentpulse.test:8080/api/v1/',
+            ''
+        );
+
+        $this->assertSame('', $endpoint);
+    }
+
+    #[Test]
     public function it_builds_content_view_url_from_app_base_url(): void
     {
-        $url = ContentPulseEndpointResolver::buildContentUrl('', 9);
+        $url = ContentPulseEndpointResolver::buildContentUrl('', '01KRDW4ND6CN9Y7E0S3J0BVBTQ');
 
         $this->assertContains($url, [
-            'https://app.contentpulse.io/content/9',
-            'http://app.contentpulse.test:5173/content/9',
+            'https://app.contentpulse.io/content/01KRDW4ND6CN9Y7E0S3J0BVBTQ',
+            'http://app.contentpulse.test:5173/content/01KRDW4ND6CN9Y7E0S3J0BVBTQ',
         ]);
     }
 }

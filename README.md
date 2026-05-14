@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/contentpulseio/contentpulse-php-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/contentpulseio/contentpulse-php-sdk/actions/workflows/ci.yml)
 
-Official PHP SDK for [ContentPulse.io](https://contentpulse.io) — content rendering, API client, and publishing utilities.
+Official PHP SDK for [ContentPulse.io](https://contentpulse.io) - content rendering, API client, and publishing utilities.
 
 ## Requirements
 

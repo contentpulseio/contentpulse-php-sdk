@@ -1,6 +1,6 @@
 {
     "name": "contentpulse/contentpulse-php",
-    "description": "The official PHP SDK for ContentPulse.io — content rendering, API client, and publishing utilities.",
+    "description": "The official PHP SDK for ContentPulse.io - content rendering, API client, and publishing utilities.",
     "type": "library",
     "license": "MIT",
     "keywords": ["contentpulse", "cms", "content", "seo", "rendering", "api-client"],

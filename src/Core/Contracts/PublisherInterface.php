@@ -6,6 +6,7 @@ namespace ContentPulse\Core\Contracts;
 
 use ContentPulse\Core\DTO\ContentItem;
 use ContentPulse\Core\DTO\PublishResult;
+use ContentPulse\Core\Exceptions\PublishException;
 
 interface PublisherInterface
 {
@@ -14,14 +15,14 @@ interface PublisherInterface
      *
      * @param  array<string, mixed>  $options  Platform-specific options
      *
-     * @throws \ContentPulse\Core\Exceptions\PublishException
+     * @throws PublishException
      */
     public function publish(ContentItem $content, array $options = []): PublishResult;
 
     /**
      * Delete a previously published content item from the target platform.
      *
-     * @throws \ContentPulse\Core\Exceptions\PublishException
+     * @throws PublishException
      */
     public function unpublish(string $externalId): bool;
 

@@ -22,6 +22,19 @@ final class CompatibilityInfo
         public readonly array $capabilities = [],
     ) {}
 
+    public static function isValidPlatform(string $platform): bool
+    {
+        return in_array($platform, self::VALID_PLATFORMS, true);
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function getValidPlatforms(): array
+    {
+        return self::VALID_PLATFORMS;
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -35,18 +48,5 @@ final class CompatibilityInfo
             'message' => $this->message,
             'capabilities' => $this->capabilities,
         ];
-    }
-
-    public static function isValidPlatform(string $platform): bool
-    {
-        return in_array($platform, self::VALID_PLATFORMS, true);
-    }
-
-    /**
-     * @return string[]
-     */
-    public static function getValidPlatforms(): array
-    {
-        return self::VALID_PLATFORMS;
     }
 }

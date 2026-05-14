@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace ContentPulse\Core\Exceptions;
 
+use Throwable;
+
 class PublishException extends ContentPulseException
 {
     public function __construct(
         string $message,
         protected readonly string $platform = '',
-        ?\Throwable $previous = null,
+        ?Throwable $previous = null,
     ) {
         parent::__construct($message, 0, $previous);
     }
