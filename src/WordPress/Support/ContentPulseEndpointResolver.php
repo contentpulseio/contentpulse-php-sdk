@@ -9,7 +9,7 @@ use function defined;
 
 final class ContentPulseEndpointResolver
 {
-    public const DEFAULT_API_BASE_URL = 'https://api.contentpulse.io';
+    public const DEFAULT_API_BASE_URL = 'https://contentpulse.io';
 
     public const DEFAULT_APP_BASE_URL = 'https://app.contentpulse.io';
 

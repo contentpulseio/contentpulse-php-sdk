@@ -22,7 +22,7 @@ composer require contentpulse/contentpulse-php
 use ContentPulse\Http\ContentPulseClient;
 
 $client = new ContentPulseClient(
-    baseUrl: 'https://api.contentpulse.io',
+    baseUrl: 'https://contentpulse.io',
     apiKey: 'your-api-key'
 );
 ```
@@ -34,13 +34,15 @@ use ContentPulse\WordPress\Support\ContentPulseEndpointResolver;
 
 $apiBaseUrl = ContentPulseEndpointResolver::resolveApiBaseUrlFromEnvironment();
 $appBaseUrl = ContentPulseEndpointResolver::resolveAppBaseUrlFromEnvironment();
-$publishEndpoint = ContentPulseEndpointResolver::buildPublishWordPressEndpoint($apiBaseUrl, 11);
-$contentUrl = ContentPulseEndpointResolver::buildContentUrl($appBaseUrl, 11);
+$publishEndpoint = ContentPulseEndpointResolver::buildPublishWordPressEndpoint($apiBaseUrl, $contentId);
+$contentUrl = ContentPulseEndpointResolver::buildContentUrl($appBaseUrl, $contentId);
 ```
 
 When no overrides are provided, the resolver auto-selects sensible defaults:
 - Local/dev: `http://contentpulse.test:8080` and `http://app.contentpulse.test:5173` (when `contentpulse.test` is resolvable)
-- Otherwise: `https://api.contentpulse.io` and `https://app.contentpulse.io`
+- Otherwise: `https://contentpulse.io` and `https://app.contentpulse.io`
+
+Overrides (highest to lowest precedence): explicit argument → PHP constant (`CONTENTPULSE_API_URL`, `CONTENTPULSE_APP_URL`) → environment variable.
 
 ### Fetch content feed
 
