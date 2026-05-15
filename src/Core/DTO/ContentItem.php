@@ -52,8 +52,6 @@ final class ContentItem
         $seo = SeoMeta::fromArray($data);
 
         return new self(
-            // Content IDs are public ULID strings (e.g. "01KRDW4ND6CN9Y7E0S3J0BVBTQ").
-            // Treat as string so ULIDs are not truncated by an int cast.
             id: (string) ($data['id'] ?? ''),
             slug: $data['slug'] ?? '',
             title: $data['title'] ?? '',
