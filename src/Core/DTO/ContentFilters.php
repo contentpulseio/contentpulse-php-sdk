@@ -12,7 +12,7 @@ final class ContentFilters
         public readonly ?string $status = null,
         public readonly ?string $contentType = null,
         public readonly ?string $locale = null,
-        public readonly ?int $websiteId = null,
+        public readonly ?string $websiteId = null,
         public readonly ?string $search = null,
         public readonly ?string $sortBy = null,
         public readonly ?string $sortDirection = null,

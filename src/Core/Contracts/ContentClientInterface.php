@@ -30,10 +30,16 @@ interface ContentClientInterface
     public function getContentBySlug(string $slug): ContentItem;
 
     /**
-     * Retrieve a single content item by ID.
+     * Retrieve a single content item by its public ULID.
+     *
+     * Content IDs across the ContentPulse API are always ULID strings.
+     * Integer primary keys are an internal database detail and are never
+     * accepted by, returned from, or passed through this SDK.
+     *
+     * @param  string  $id  Public ULID of the content item.
      *
      * @throws ApiException
      * @throws NotFoundException
      */
-    public function getContentById(int $id): ContentItem;
+    public function getContentById(string $id): ContentItem;
 }

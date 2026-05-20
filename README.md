@@ -18,14 +18,29 @@ composer require contentpulse/contentpulse-php
 
 ### Create a client
 
+The only required argument is your API key. When `baseUrl` is omitted, the SDK
+resolves it (in order) from:
+
+1. The `CONTENTPULSE_BASE_URL` PHP constant (if defined)
+2. The `CONTENTPULSE_BASE_URL` environment variable
+3. The default `https://contentpulse.io`
+
 ```php
 use ContentPulse\Http\ContentPulseClient;
 
+// Minimal: uses CONTENTPULSE_BASE_URL (env/constant) or defaults to https://contentpulse.io
+$client = new ContentPulseClient(apiKey: 'your-api-key');
+
+// Or override explicitly:
 $client = new ContentPulseClient(
+    apiKey: 'your-api-key',
     baseUrl: 'https://contentpulse.io',
-    apiKey: 'your-api-key'
 );
 ```
+
+The SDK performs a **single** HTTP request per call - it does not loop,
+retry, or `usleep`. Callers are expected to apply their own retry policy
+when needed.
 
 ### Resolve WordPress endpoints (SDK-managed)
 
