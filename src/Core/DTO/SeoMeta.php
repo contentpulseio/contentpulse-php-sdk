@@ -23,10 +23,14 @@ final class SeoMeta
      */
     public static function fromArray(array $data): self
     {
+        $metaKeywords = $data['meta_keywords']
+            ?? $data['keywords']
+            ?? ($data['current_version']['meta_keywords'] ?? null);
+
         return new self(
             metaTitle: $data['meta_title'] ?? null,
             metaDescription: $data['meta_description'] ?? null,
-            metaKeywords: $data['meta_keywords'] ?? null,
+            metaKeywords: is_array($metaKeywords) ? array_values($metaKeywords) : null,
             ogTitle: $data['og_title'] ?? null,
             ogDescription: $data['og_description'] ?? null,
             twitterTitle: $data['twitter_title'] ?? null,
