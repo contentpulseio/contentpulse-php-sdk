@@ -62,6 +62,23 @@ final class ContentItem
 
         $seo = SeoMeta::fromArray($data);
 
+        // The content feed exposes the featured image as a full public URL under
+        // `featured_image_url` (top-level + on current_version); the raw storage
+        // path lives under `featured_image` (on current_version). Prefer the full
+        // URL so consumers can display/download it without resolving storage paths.
+        $featuredImage = $data['featured_image_url']
+            ?? $version['featured_image_url']
+            ?? $data['featured_image']
+            ?? $version['featured_image']
+            ?? null;
+
+        // Variant URLs ({og: {url: ...}, ...}) are nested on current_version in the
+        // feed; only fall back to the top level if a future API surfaces them there.
+        $imageVariants = $data['image_variants'] ?? $version['image_variants'] ?? [];
+        if (! is_array($imageVariants)) {
+            $imageVariants = [];
+        }
+
         return new self(
             id: (string) ($data['id'] ?? ''),
             slug: $data['slug'] ?? '',
@@ -70,8 +87,8 @@ final class ContentItem
             renderedHtml: $renderedHtml,
             faq: $faq,
             excerpt: $data['excerpt'] ?? null,
-            featuredImage: $data['featured_image'] ?? null,
-            images: $data['image_variants'] ?? [],
+            featuredImage: $featuredImage,
+            images: $imageVariants,
             seo: $seo,
             status: $data['status'] ?? null,
             contentType: $data['content_type'] ?? null,

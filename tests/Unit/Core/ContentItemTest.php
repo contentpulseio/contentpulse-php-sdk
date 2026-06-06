@@ -85,6 +85,34 @@ class ContentItemTest extends TestCase
     }
 
     #[Test]
+    public function it_resolves_featured_image_and_variants_from_the_content_feed_shape(): void
+    {
+        // Mirrors the real /api/v1/content feed: the full image URL lives at the
+        // top level under featured_image_url, while the raw path and variant URLs
+        // live on current_version. There is no top-level featured_image/image_variants.
+        $data = [
+            'id' => '01KKHHVV87M9CBWMF4S5EZXZJR',
+            'slug' => 'laravel-vs-nodejs',
+            'title' => 'Laravel vs Node.js',
+            'featured_image_url' => 'https://contentpulse.io/storage/tenants/12/images/17/titles/x.webp?v=1',
+            'current_version' => [
+                'featured_image' => 'tenants/12/images/17/titles/x.webp',
+                'featured_image_url' => 'https://contentpulse.io/storage/tenants/12/images/17/titles/x.webp?v=1',
+                'image_variants' => [
+                    'og' => ['url' => 'https://contentpulse.io/storage/og.webp'],
+                    'thumbnail' => ['url' => 'https://contentpulse.io/storage/thumb.webp'],
+                ],
+            ],
+        ];
+
+        $item = ContentItem::fromApiResponse($data);
+
+        $this->assertSame('https://contentpulse.io/storage/tenants/12/images/17/titles/x.webp?v=1', $item->featuredImage);
+        $this->assertArrayHasKey('og', $item->images);
+        $this->assertSame('https://contentpulse.io/storage/og.webp', $item->images['og']['url']);
+    }
+
+    #[Test]
     public function it_keeps_id_as_string_when_payload_is_numeric(): void
     {
         $data = [
