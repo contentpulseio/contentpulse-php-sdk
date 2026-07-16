@@ -125,4 +125,37 @@ class ContentItemTest extends TestCase
 
         $this->assertSame('42', $item->id);
     }
+
+    #[Test]
+    public function it_prefers_last_refreshed_at_over_row_updated_at(): void
+    {
+        $data = [
+            'id' => '01KRDW4ND6CN9Y7E0S3J0BVBTQ',
+            'slug' => 'dates',
+            'title' => 'Dates',
+            'published_at' => '2025-03-19 10:00:00',
+            'last_refreshed_at' => '2026-01-29 07:03:10',
+            'updated_at' => '2026-07-16 19:29:21',
+        ];
+
+        $item = ContentItem::fromApiResponse($data);
+
+        $this->assertSame('2026-01-29 07:03:10', $item->updatedAt?->format('Y-m-d H:i:s'));
+    }
+
+    #[Test]
+    public function it_falls_back_to_published_at_when_last_refreshed_missing(): void
+    {
+        $data = [
+            'id' => '01KRDW4ND6CN9Y7E0S3J0BVBTQ',
+            'slug' => 'dates',
+            'title' => 'Dates',
+            'published_at' => '2025-12-09 11:00:14',
+            'updated_at' => '2026-07-16 19:29:21',
+        ];
+
+        $item = ContentItem::fromApiResponse($data);
+
+        $this->assertSame('2025-12-09 11:00:14', $item->updatedAt?->format('Y-m-d H:i:s'));
+    }
 }

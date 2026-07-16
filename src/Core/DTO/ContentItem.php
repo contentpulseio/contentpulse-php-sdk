@@ -99,7 +99,10 @@ final class ContentItem
             publishedAt: self::parseDate($data['published_at'] ?? null),
             scheduledAt: self::parseDate($data['scheduled_at'] ?? null),
             createdAt: self::parseDate($data['created_at'] ?? null),
-            updatedAt: self::parseDate($data['updated_at'] ?? null),
+            // Editorial "updated" date — never Laravel row updated_at (bumps on
+            // meta/admin edits). Prefer last_refreshed_at, else published_at.
+            updatedAt: self::parseDate($data['last_refreshed_at'] ?? null)
+                ?? self::parseDate($data['published_at'] ?? null),
             raw: $data,
         );
     }
