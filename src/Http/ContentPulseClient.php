@@ -96,7 +96,7 @@ class ContentPulseClient implements ContentClientInterface
     }
 
     /**
-     * @return list<\ContentPulse\Core\DTO\ContentTranslationSummary>
+     * @return list<ContentTranslationSummary>
      */
     public function listContentTranslations(string $contentId): array
     {
