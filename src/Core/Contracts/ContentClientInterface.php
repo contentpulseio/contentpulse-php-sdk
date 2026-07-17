@@ -7,6 +7,8 @@ namespace ContentPulse\Core\Contracts;
 use ContentPulse\Core\DTO\ContentFeed;
 use ContentPulse\Core\DTO\ContentFilters;
 use ContentPulse\Core\DTO\ContentItem;
+use ContentPulse\Core\DTO\ContentTranslationItem;
+use ContentPulse\Core\DTO\ContentTranslationSummary;
 use ContentPulse\Core\Exceptions\ApiException;
 use ContentPulse\Core\Exceptions\AuthenticationException;
 use ContentPulse\Core\Exceptions\NotFoundException;
@@ -42,4 +44,22 @@ interface ContentClientInterface
      * @throws NotFoundException
      */
     public function getContentById(string $id): ContentItem;
+
+    /**
+     * List per-locale translation status rows for a content ULID.
+     *
+     * @return list<ContentTranslationSummary>
+     *
+     * @throws ApiException
+     * @throws NotFoundException
+     */
+    public function listContentTranslations(string $contentId): array;
+
+    /**
+     * Full translated payload for one locale (completed/stale only).
+     *
+     * @throws ApiException
+     * @throws NotFoundException
+     */
+    public function getContentTranslation(string $contentId, string $locale): ContentTranslationItem;
 }

@@ -8,6 +8,8 @@ use ContentPulse\Core\Contracts\ContentClientInterface;
 use ContentPulse\Core\DTO\ContentFeed;
 use ContentPulse\Core\DTO\ContentFilters;
 use ContentPulse\Core\DTO\ContentItem;
+use ContentPulse\Core\DTO\ContentTranslationItem;
+use ContentPulse\Core\DTO\ContentTranslationSummary;
 use ContentPulse\Core\Exceptions\ApiException;
 use ContentPulse\Core\Exceptions\AuthenticationException;
 use ContentPulse\Core\Exceptions\NotFoundException;
@@ -91,6 +93,52 @@ class ContentPulseClient implements ContentClientInterface
         $data = $response['data'] ?? $response;
 
         return ContentItem::fromApiResponse($data);
+    }
+
+    /**
+     * @return list<\ContentPulse\Core\DTO\ContentTranslationSummary>
+     */
+    public function listContentTranslations(string $contentId): array
+    {
+        $contentId = trim($contentId);
+        if ($contentId === '') {
+            throw new NotFoundException('Content id must be a non-empty ULID string.');
+        }
+
+        $response = $this->request('GET', 'content/'.rawurlencode($contentId).'/translations');
+        $rows = $response['data'] ?? [];
+        if (! is_array($rows)) {
+            return [];
+        }
+
+        $out = [];
+        foreach ($rows as $row) {
+            if (is_array($row)) {
+                $out[] = ContentTranslationSummary::fromApiResponse($row);
+            }
+        }
+
+        return $out;
+    }
+
+    public function getContentTranslation(string $contentId, string $locale): ContentTranslationItem
+    {
+        $contentId = trim($contentId);
+        $locale = trim($locale);
+        if ($contentId === '' || $locale === '') {
+            throw new NotFoundException('Content id and locale are required.');
+        }
+
+        $response = $this->request(
+            'GET',
+            'content/'.rawurlencode($contentId).'/translations/'.rawurlencode($locale)
+        );
+        $data = $response['data'] ?? $response;
+        if (! is_array($data)) {
+            throw new NotFoundException("Translation '{$locale}' not found for content '{$contentId}'.");
+        }
+
+        return ContentTranslationItem::fromApiResponse($data);
     }
 
     /**
