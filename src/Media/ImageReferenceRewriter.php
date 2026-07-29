@@ -162,9 +162,6 @@ final class ImageReferenceRewriter
         return is_array($fallback) ? $fallback : [];
     }
 
-    /**
-     * @param  mixed  $variant
-     */
     private function variantUrl(mixed $variant): ?string
     {
         if (is_string($variant) && $variant !== '') {
