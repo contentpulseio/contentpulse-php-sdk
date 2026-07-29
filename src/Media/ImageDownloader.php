@@ -29,6 +29,7 @@ class ImageDownloader
      *                                   (e.g. "/storage/media/blog" or "https://cdn.example.com/blog").
      * @param  bool  $enabled  When false, localize() returns the original URL untouched.
      * @param  int  $timeout  HTTP download timeout in seconds.
+     * @param  string|null  $sourceBaseUrl  ContentPulse host used for storage-relative image paths.
      */
     public function __construct(
         private readonly string $storagePath,
@@ -37,6 +38,7 @@ class ImageDownloader
         private readonly int $timeout = 30,
         ?LoggerInterface $logger = null,
         ?Client $httpClient = null,
+        private readonly ?string $sourceBaseUrl = null,
     ) {
         $this->logger = $logger ?? new NullLogger;
         $this->http = $httpClient ?? new Client(['timeout' => $this->timeout]);
@@ -50,6 +52,12 @@ class ImageDownloader
     public function localize(?string $url): ?string
     {
         if ($url === null || $url === '' || ! $this->enabled) {
+            return $url;
+        }
+
+        $url = $this->absoluteContentPulseStorageUrl($url);
+
+        if (! $this->isAbsoluteHttpUrl($url)) {
             return $url;
         }
 
@@ -125,5 +133,33 @@ class ImageDownloader
         if (! is_dir($path)) {
             mkdir($path, 0755, true);
         }
+    }
+
+    private function isAbsoluteHttpUrl(string $url): bool
+    {
+        return str_starts_with($url, 'http://') || str_starts_with($url, 'https://');
+    }
+
+    /**
+     * Chart sections use public storage paths (/storage/content/...) while
+     * translated images can use tenants/... or content/... directly. Resolve
+     * those upstream-only paths before storing them on the consumer's server.
+     */
+    private function absoluteContentPulseStorageUrl(string $url): string
+    {
+        if ($this->isAbsoluteHttpUrl($url)) {
+            return $url;
+        }
+
+        $path = ltrim($url, '/');
+        if (str_starts_with($path, 'storage/')) {
+            $path = substr($path, strlen('storage/'));
+        }
+
+        if ((! str_starts_with($path, 'content/') && ! str_starts_with($path, 'tenants/')) || $this->sourceBaseUrl === null || $this->sourceBaseUrl === '') {
+            return $url;
+        }
+
+        return rtrim($this->sourceBaseUrl, '/').'/storage/'.$path;
     }
 }
