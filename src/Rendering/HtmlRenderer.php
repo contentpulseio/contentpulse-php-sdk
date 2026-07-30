@@ -47,7 +47,8 @@ class HtmlRenderer implements SectionRendererInterface
     public function supports(string $sectionType): bool
     {
         return in_array($sectionType, [
-            'heading', 'h2', 'h3', 'h4', 'paragraph', 'content', 'hero', 'cover',
+            'heading', 'h2', 'h3', 'h4', 'paragraph', 'content', 'content_seo',
+            'content_backlink', 'conclusion', 'hero', 'cover',
             'list', 'checklist', 'quote', 'alert', 'table', 'stats', 'image',
             'faq', 'code', 'code_snippet', 'separator', 'callout', 'tip_box',
             'steps', 'dos_donts', 'pros_cons', 'summary_box', 'accordion', 'testimonial',

@@ -82,6 +82,35 @@ class SectionNormalizerTest extends TestCase
     }
 
     #[Test]
+    public function it_normalizes_content_backlink_pipeline_shape(): void
+    {
+        $raw = [
+            [
+                'type' => 'content_backlink',
+                'data' => [
+                    'title' => 'Related reading',
+                    'paragraphs' => [
+                        'See the full guide for more detail.',
+                    ],
+                    'backlink_exchange' => [
+                        'url' => 'https://partner.example/guide',
+                        'anchor_text' => 'full guide',
+                        'paragraph_number' => 1,
+                    ],
+                ],
+            ],
+        ];
+
+        $result = $this->normalizer->normalize($raw);
+
+        $this->assertCount(1, $result);
+        $this->assertSame('content', $result[0]->type);
+        $this->assertStringContainsString('Related reading', (string) $result[0]->content);
+        $this->assertStringContainsString('See the full guide for more detail.', (string) $result[0]->content);
+        $this->assertSame('https://partner.example/guide', $result[0]->attributes['backlink_exchange']['url'] ?? null);
+    }
+
+    #[Test]
     public function it_handles_array_content_in_faq_sections(): void
     {
         $raw = [
