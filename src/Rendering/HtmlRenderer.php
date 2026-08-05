@@ -24,6 +24,7 @@ class HtmlRenderer implements SectionRendererInterface
             'list', 'checklist' => $this->renderList($section),
             'quote', 'alert' => $this->renderQuote($section),
             'table', 'stats' => $this->renderTable($section),
+            'chart' => $this->renderChart($section),
             'image' => $this->renderImage($section),
             'faq' => $this->renderFaq($section),
             'code', 'code_snippet' => $this->renderCode($section),
@@ -52,6 +53,7 @@ class HtmlRenderer implements SectionRendererInterface
             'list', 'checklist', 'quote', 'alert', 'table', 'stats', 'image',
             'faq', 'code', 'code_snippet', 'separator', 'callout', 'tip_box',
             'steps', 'dos_donts', 'pros_cons', 'summary_box', 'accordion', 'testimonial',
+            'chart',
         ], true);
     }
 
@@ -193,6 +195,43 @@ class HtmlRenderer implements SectionRendererInterface
         $captionHtml = $caption ? "<figcaption>{$caption}</figcaption>" : '';
 
         return "<figure><img src=\"{$url}\" alt=\"{$alt}\">{$captionHtml}</figure>\n";
+    }
+
+    private function renderChart(Section $section): string
+    {
+        $data = is_array($section->content) ? $section->content : [];
+        $title = trim((string) ($data['title'] ?? ''));
+        $url = trim((string) ($data['image_url'] ?? ''));
+        $alt = htmlspecialchars((string) ($data['image_alt'] ?? $title ?: 'Chart'), ENT_QUOTES, 'UTF-8');
+        $caption = trim((string) ($data['image_caption'] ?? ''));
+
+        if ($url !== '') {
+            $html = ($title !== '' ? '<h2>'.htmlspecialchars($title, ENT_QUOTES, 'UTF-8').'</h2>\n' : '')
+                .'<figure><img src="'.htmlspecialchars($url, ENT_QUOTES, 'UTF-8').'" alt="'.$alt.'">';
+            if ($caption !== '') {
+                $html .= '<figcaption>'.htmlspecialchars($caption, ENT_QUOTES, 'UTF-8').'</figcaption>';
+            }
+
+            return $html."</figure>\n";
+        }
+
+        $rows = is_array($data['data'] ?? null) ? $data['data'] : [];
+        if ($rows === []) {
+            return '';
+        }
+
+        $html = $title !== '' ? '<h2>'.htmlspecialchars($title, ENT_QUOTES, 'UTF-8').'</h2>\n' : '';
+        $html .= '<ul>\n';
+        foreach ($rows as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+            $label = htmlspecialchars((string) ($row['label'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $value = htmlspecialchars((string) ($row['value'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $html .= '<li>'.$label.($label !== '' && $value !== '' ? ': ' : '').$value.'</li>\n';
+        }
+
+        return $html."</ul>\n";
     }
 
     private function renderFaq(Section $section): string

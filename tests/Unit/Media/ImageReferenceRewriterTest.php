@@ -18,6 +18,7 @@ class ImageReferenceRewriterTest extends TestCase
             'type' => 'chart',
             'data' => [
                 'stat_group_id' => 'ai-adoption',
+                'image_path' => 'https://contentpulse.io/storage/content/42/charts/ai.png?v=2',
                 'image_url' => 'https://contentpulse.io/storage/content/42/charts/ai.png?v=2',
                 'image_variants' => ['small' => ['url' => 'https://contentpulse.io/storage/content/42/charts/ai-small.png?v=2']],
             ],
@@ -26,6 +27,7 @@ class ImageReferenceRewriterTest extends TestCase
             'type' => 'chart',
             'data' => [
                 'stat_group_id' => 'ai-adoption',
+                'image_path' => 'media/blog/stable-chart.png',
                 'image_url' => 'media/blog/stable-chart.png',
                 'image_variants' => ['small' => ['url' => 'media/blog/stable-chart-small.png']],
             ],
@@ -39,8 +41,9 @@ class ImageReferenceRewriterTest extends TestCase
         }, $existing);
 
         $this->assertSame('media/blog/stable-chart.png', $rewritten[0]['data']['image_url']);
+        $this->assertSame('media/blog/stable-chart.png', $rewritten[0]['data']['image_path']);
         $this->assertSame('media/blog/stable-chart-small.png', $rewritten[0]['data']['image_variants']['small']['url']);
-        $this->assertCount(2, $seen);
+        $this->assertCount(3, $seen);
     }
 
     #[Test]

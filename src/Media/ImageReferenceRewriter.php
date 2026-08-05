@@ -35,6 +35,10 @@ final class ImageReferenceRewriter
                 $data['image_url'] = $localize($data['image_url'], $existing['image_url'] ?? null);
             }
 
+            if (isset($data['image_path']) && is_string($data['image_path']) && $data['image_path'] !== '') {
+                $data['image_path'] = $localize($data['image_path'], $existing['image_path'] ?? null);
+            }
+
             if (isset($data['image_variants']) && is_array($data['image_variants'])) {
                 $existingVariants = is_array($existing['image_variants'] ?? null) ? $existing['image_variants'] : [];
                 $data['image_variants'] = $this->rewriteImageMap($data['image_variants'], $localize, $existingVariants);

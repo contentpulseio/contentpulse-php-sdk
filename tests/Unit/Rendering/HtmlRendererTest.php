@@ -11,6 +11,23 @@ use PHPUnit\Framework\TestCase;
 
 class HtmlRendererTest extends TestCase
 {
+    public function test_it_renders_chart_image_sections(): void
+    {
+        $section = new \ContentPulse\Core\DTO\Section(
+            type: 'chart',
+            content: [
+                'title' => 'Adoption by platform',
+                'image_url' => '/storage/content/42/charts/adoption.png',
+                'image_alt' => 'Bar chart comparing adoption.',
+            ],
+        );
+
+        $html = (new HtmlRenderer)->render($section);
+
+        $this->assertStringContainsString('<h2>Adoption by platform</h2>', $html);
+        $this->assertStringContainsString('src="/storage/content/42/charts/adoption.png"', $html);
+        $this->assertStringContainsString('alt="Bar chart comparing adoption."', $html);
+    }
     private HtmlRenderer $renderer;
 
     protected function setUp(): void

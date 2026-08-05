@@ -90,6 +90,13 @@ class SectionNormalizer
                 return $this->normalizeStructuredParagraphSection($type, $data);
             }
 
+            // Charts are structured data with a rendered image URL. Keep the
+            // complete map intact so generic consumers can render the localized
+            // chart asset instead of losing it as an opaque paragraph.
+            if (is_array($data) && $type === 'chart') {
+                return new Section(type: 'chart', content: $data, attributes: []);
+            }
+
             // Shape B: data is the content itself (string or array)
             return new Section(
                 type: $type,
