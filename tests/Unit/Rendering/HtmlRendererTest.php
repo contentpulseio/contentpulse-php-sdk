@@ -11,6 +11,8 @@ use PHPUnit\Framework\TestCase;
 
 class HtmlRendererTest extends TestCase
 {
+    private HtmlRenderer $renderer;
+
     public function test_it_renders_chart_image_sections(): void
     {
         $section = new Section(
@@ -28,8 +30,6 @@ class HtmlRendererTest extends TestCase
         $this->assertStringContainsString('src="/storage/content/42/charts/adoption.png"', $html);
         $this->assertStringContainsString('alt="Bar chart comparing adoption."', $html);
     }
-
-    private HtmlRenderer $renderer;
 
     protected function setUp(): void
     {
